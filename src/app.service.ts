@@ -7,35 +7,28 @@ export class AppService {
   constructor(private http: HttpService){}
 
   async getBitcoinPriceUSD(de:String,a:String) {
-    let aLatLong, deLatLong
-    console.log(de,a)
-    console.log('https://adab0936-27cd-4086-a699-d5797ca35fef@api.navitia.io/v1/places?q=' + de)
+    let deLatLong, aLatLong;
 
-    deLatLong = this.http
+  console.log(de,a)
+  await this.http
       .get('https://adab0936-27cd-4086-a699-d5797ca35fef@api.navitia.io/v1/places?q=' + de)
-      .pipe(
-        map((res) => res.data?.places),
-        map((places) => { 
-          return places?.id;
-        }),
-      )
+      .pipe(map((response) => response.data))
+      .forEach((data) => deLatLong = data.places[0].id);
 
-    console.debug(deLatLong)
+  console.log(deLatLong)
 
-    this.http
+  await this.http
       .get('https://adab0936-27cd-4086-a699-d5797ca35fef@api.navitia.io/v1/places?q=' + a)
-      .pipe(
-        map((res) => res.data?.places),
-        map((places) => { 
-          aLatLong =  places?.id;
-        }),
-      )
+      .pipe(map((res) => res.data))
+      .forEach((data) => aLatLong = data.places[0].id);
+  
+  console.log(aLatLong)
 
-    return this.http
-      .get('https://adab0936-27cd-4086-a699-d5797ca35fef@api.navitia.io/v1/coverage/fr-ne/journeys?from=' + deLatLong + '&to=' + aLatLong + '&')
+   return this.http
+      .get('https://adab0936-27cd-4086-a699-d5797ca35fef@api.navitia.io/v1/coverage/fr-ne/journeys?from=' + deLatLong + '&to=' + aLatLong)
       .pipe(
-        
         map((res) => { 
+          console.log(res.data?.journeys)
           return res.data?.journeys;
         }),
       )

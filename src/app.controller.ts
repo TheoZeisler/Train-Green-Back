@@ -11,6 +11,5 @@ export class AppController {
     @Query('a') a: String,
     ){
     return this.appService.getBitcoinPriceUSD(de,a);
-    //return 'de: '+de+'a: '+a;
   }
 }
